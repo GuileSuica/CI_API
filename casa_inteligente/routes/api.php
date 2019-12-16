@@ -18,7 +18,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 });
 
 Route::namespace('Api')->name('api.')->group(function(){
-	Route::prefix('sensors')->group(function(){
+	Route::prefix('sensor')->group(function(){
 		Route::get('/', 'SensorController@index')->name('index_sensors');
 		Route::get('/{id}', 'SensorController@show')->name('single_sensors');
 		Route::post('/', 'SensorController@store')->name('store_sensors');
