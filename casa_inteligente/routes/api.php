@@ -16,3 +16,13 @@ use Illuminate\Http\Request;
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+Route::namespace('Api')->name('api.')->group(function(){
+	Route::prefix('sensors')->group(function(){
+		Route::get('/', 'SensorController@index')->name('index_sensors');
+		Route::get('/{id}', 'SensorController@show')->name('single_sensors');
+		Route::post('/', 'SensorController@store')->name('store_sensors');
+		Route::put('/{id}', 'SensorController@update')->name('update_sensors');
+		Route::delete('/{id}', 'SensorController@delete')->name('delete_sensors');
+	});
+});
