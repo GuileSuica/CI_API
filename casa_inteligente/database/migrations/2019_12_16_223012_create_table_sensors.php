@@ -15,7 +15,7 @@ class CreateTableSensors extends Migration
     {
         Schema::create('sensors', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('nome');
+            $table->text('nome');
             $table->enum('tipo', ['temperatura', 'luminosidade', 'presença', 'magnético']);
             $table->timestamps();
         });
