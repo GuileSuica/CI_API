@@ -21,7 +21,7 @@ class SensorController extends Controller
     public function show($id)
     {
     	$sensors = $this->sensors->find($id);
-    	if(! $sensors) return response()->json(ApiError::errorMessage('Sensor não encontrado!', 4040), 404);
+    	if(is_null($sensors)) return response()->json(['data'=>['msg'=>'Sensor não encontrado!']], 404);
     	$data = ['data' => $sensors];
 	    return response()->json($data);
     }
@@ -34,9 +34,10 @@ class SensorController extends Controller
 			return response()->json($return, 201);
 		} catch (\Exception $e) {
 			if(config('app.debug')) {
-				return response()->json(ApiError::errorMessage($e->getMessage(), 1010), 500);
+				return response()->json(['data'=>['msg'=>'Houve um erro ao realizar operação de salvar']], 500);
 			}
-			return response()->json(ApiError::errorMessage('Houve um erro ao realizar operação de salvar', 1010),  500);
+			if(is_null($sensors)) return response()->json(['data'=>['msg'=>'Sensor não encontrado!']], 404);
+
 		}
     }
 	public function update(Request $request, $id)
@@ -49,21 +50,19 @@ class SensorController extends Controller
 			return response()->json($return, 201);
 		} catch (\Exception $e) {
 			if(config('app.debug')) {
-				return response()->json(ApiError::errorMessage($e->getMessage(), 1011),  500);
+				return response()->json(['data'=>['msg'=>'Houve um erro ao realizar operação de atualizar']], 500);
 			}
-			return response()->json(ApiError::errorMessage('Houve um erro ao realizar operação de atualizar', 1011), 500);
 		}
 	}
 	public function delete(Sensor $id)
 	{
 		try {
 			$id->delete();
-			return response()->json(['data' => ['msg' => 'Produto: ' . $id->name . ' removido com sucesso!']], 200);
+			return response()->json(['data' => ['msg' => 'Sensor removido com sucesso!']], 200);
 		}catch (\Exception $e) {
 			if(config('app.debug')) {
-				return response()->json(ApiError::errorMessage($e->getMessage(), 1012),  500);
+				return response()->json(['data'=>['msg'=>'Houve um erro ao realizar operação de remover']], 500);
 			}
-			return response()->json(ApiError::errorMessage('Houve um erro ao realizar operação de remover', 1012),  500);
 		}
 	}
 }
