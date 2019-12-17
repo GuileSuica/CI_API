@@ -15,9 +15,14 @@ class SensorController extends Controller
 	{
 		$this->sensors = $sensors;
 	}
-	public function index()
+    public function index()
     {
-    	return response()->json($this->sensors->all());
+        if(sizeof($this->sensors->all()) <= 0 ){
+            return response()->json(['data' => ['msg' => 'Nenhum sensor cadastrado']]);
+        }
+        else{
+            return response()->json($this->sensors->all());
+        }
     }
     public function show($id)
     {
@@ -81,12 +86,7 @@ class SensorController extends Controller
 	}
 	public function delete(Sensor $id)
 	{
-        $validator = Validator::make($id,[
-            'id' => 'required|number'
-        ]);
-        if($validator->errors()){
-            return response()->json($validator->errors(), 404);
-        }
+
 		try {
 			$id->delete();
 			return response()->json(['data' => ['msg' => 'Sensor removido com sucesso!']], 200);
