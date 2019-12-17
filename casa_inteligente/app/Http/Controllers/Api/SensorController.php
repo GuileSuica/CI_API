@@ -18,7 +18,7 @@ class SensorController extends Controller
     public function index()
     {
         if(sizeof($this->sensors->all()) <= 0 ){
-            return response()->json(['data' => ['msg' => 'Nenhum sensor cadastrado']]);
+            return response()->json(['data' => ['msg' => 'Nenhum sensor cadastrado']], 404);
         }
         else{
             return response()->json($this->sensors->all());
