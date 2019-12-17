@@ -24,5 +24,13 @@ Route::namespace('Api')->name('api.')->group(function(){
 		Route::post('/', 'SensorController@store')->name('store_sensors');
 		Route::put('/{id}', 'SensorController@update')->name('update_sensors');
 		Route::delete('/{id}', 'SensorController@delete')->name('delete_sensors');
-	});
+    });
+
+    Route::prefix('medicao')->group(function(){
+        Route::get('/medicao', 'MedicaoController@show')->name('get_medicao');
+        //Route::post('/medicao', 'MedicaoController')->name('store_medicao');
+        //Route::get('/medicao/{id}', 'MedicaoController')->name('single_medicao');
+        //Route::put('/medicao/{id}', 'MedicaoController@update')->name('update_medicao');
+        //Route::delete('/medicao/{id}', 'MedicaoController@delete')->name('delete_medicao');
+    });
 });
