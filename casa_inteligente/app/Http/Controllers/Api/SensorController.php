@@ -59,6 +59,14 @@ class SensorController extends Controller
     }
 	public function update(Request $request, $id)
 	{
+        $validator = Validator::make($id, $request->all(),[
+            'id' => 'required|number',
+            'nome' => 'required|string|min:2|max:50',
+            'tipo' => 'in:temperatura, luminosidade, presença, magnético|required|min:8|max:10'
+        ]);
+        if($validator->errors()){
+            return response()->json($validator->errors(), 404);
+        }
 		try {
 			$sensorsData = $request->all();
 			$sensors     = $this->sensors->find($id);
@@ -73,6 +81,12 @@ class SensorController extends Controller
 	}
 	public function delete(Sensor $id)
 	{
+        $validator = Validator::make($id,[
+            'id' => 'required|number'
+        ]);
+        if($validator->errors()){
+            return response()->json($validator->errors(), 404);
+        }
 		try {
 			$id->delete();
 			return response()->json(['data' => ['msg' => 'Sensor removido com sucesso!']], 200);
