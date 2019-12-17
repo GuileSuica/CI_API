@@ -27,10 +27,10 @@ Route::namespace('Api')->name('api.')->group(function(){
     });
 
     Route::prefix('medicao')->group(function(){
-        Route::get('/medicao', 'MedicaoController@show')->name('get_medicao');
-        //Route::post('/medicao', 'MedicaoController')->name('store_medicao');
-        //Route::get('/medicao/{id}', 'MedicaoController')->name('single_medicao');
-        //Route::put('/medicao/{id}', 'MedicaoController@update')->name('update_medicao');
-        //Route::delete('/medicao/{id}', 'MedicaoController@delete')->name('delete_medicao');
+        Route::get('/', 'MedicaoController@show')->name('get_medicao');
+        //Route::post('/', 'MedicaoController')->name('store_medicao');
+        //Route::get('/{id}', 'MedicaoController')->name('single_medicao');
+        //Route::put('/{id}', 'MedicaoController@update')->name('update_medicao');
+        //Route::delete('/{id}', 'MedicaoController@delete')->name('delete_medicao');
     });
 });
