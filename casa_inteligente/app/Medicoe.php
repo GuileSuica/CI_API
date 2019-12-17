@@ -4,12 +4,8 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Medicao extends Model
+class Medicoe extends Model
 {
-    protected $table = [
-        'medicoes',
-    ];
-
     protected $fillabel = [
         'valor',
         'data_horario'
