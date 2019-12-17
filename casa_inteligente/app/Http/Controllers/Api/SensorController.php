@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Sensor;
+use Illuminate\Support\Facades\Validator;
 
 class SensorController extends Controller
 {
@@ -20,6 +21,13 @@ class SensorController extends Controller
     }
     public function show($id)
     {
+        $validator = Validator::make($id,[
+            'id' => 'required|number'
+        ]);
+        if($validator->errors()){
+            return response()->json($validator->errors(), 404);
+        }
+
     	$sensors = $this->sensors->find($id);
     	if(is_null($sensors)) return response()->json(['data'=>['msg'=>'Sensor não encontrado!']], 404);
     	$data = ['data' => $sensors];
@@ -27,6 +35,15 @@ class SensorController extends Controller
     }
     public function store(Request $request)
     {
+        $validator = Validator::make($request->all(), [
+            'nome' => 'required|string|min:2|max:50',
+            'tipo' => 'in:temperatura, luminosidade, presença, magnético|required|min:8|max:10'
+        ]);
+
+        if($validator->errors()){
+            return response()->json($validator->errors(), 404);
+        }
+
 		try {
 			$sensorsData = $request->all();
 			$this->sensors->create($sensorsData);
