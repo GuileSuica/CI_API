@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Medicao;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
+
 
 class MedicaoController extends Controller
 {
@@ -13,9 +15,21 @@ class MedicaoController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+
+    private $medicao;
+    
+    public function __construct(Medicao $med){
+        $this->$medicao = $med;
+    }
+
     public function index()
     {
-        //
+        if(sizeof($this->sensors->all()) <= 0 ){
+            return response()->json(['data' => ['msg' => 'Não existe nenhuma medição salva']], 404);
+        }
+        else{
+            return response()->json($this->sensors->all());
+        }
     }
 
     /**
