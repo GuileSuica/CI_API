@@ -59,7 +59,7 @@ class MedicaoController extends Controller
         $req_sen_id = $request->sensor_id;
         $teste = Sensor::find($req_sen_id);
 
-        return response()->json($teste->tipo);
+        //return response()->json($teste->tipo);
 
         if($teste->tipo == "temperatura"){
             $validator = Validator::make($request->all(), [
