@@ -42,10 +42,10 @@ class SensorController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'nome' => 'required|string|min:2|max:50',
-            'tipo' => 'in:temperatura, luminosidade, presença, magnético|required|min:8|max:10'
+            'tipo' => 'in:temperatura,luminosidade,presenca,magnético|required|min:8|max:20'
         ]);
 
-        if($validator->errors()){
+        if(sizeof($validator->errors()) > 0 ){
             return response()->json($validator->errors(), 404);
         }
 
