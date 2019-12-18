@@ -51,11 +51,61 @@ class MedicaoController extends Controller
      */
     public function store(Request $request)
     {
-        $validator = Validator::make($request->all(), [
-            'sensor_id' => 'required|numeric|',
-            'valor' => 'required|numeric|',
-            'data_horario' => 'required|date',
-        ]);
+        //$validator = Validator::make($request->all(), [
+        //    'sensor_id' => 'required|numeric|',
+        //    'valor' => 'required|numeric|',
+        //    'data_horario' => 'required|date',
+        //]);
+        $req_sen_id = $request->sensor_id;
+        $teste = Sensor::find($req_sen_id);
+
+        return response()->json($teste->tipo);
+
+        if($teste->tipo == "temperatura"){
+            $validator = Validator::make($request->all(), [
+                'sensor_id' => 'required|numeric|',
+                'valor' => 'required|numeric|',
+                'data_horario' => 'required|date',
+            ]);
+
+            if(sizeof($validator->errors()) > 0){
+                return response()->json($validator->errors(), 404);
+            }
+        }elseif($teste->tipo == "luminosidade"){
+            $validator = Validator::make($request->all(), [
+                'sensor_id' => 'required|numeric|',
+                'valor' => 'required|numeric|size:100',
+                'data_horario' => 'required|date',
+            ]);
+
+            if(sizeof($validator->errors()) > 0){
+                return response()->json($validator->errors(), 404);
+            }
+        }elseif($teste->tipo == "presença"){
+            $validator = Validator::make($request->all(), [
+                'sensor_id' => 'required|numeric|',
+                'valor' => 'required|integer|min:-100|max:100',
+                'data_horario' => 'required|date',
+            ]);
+
+            if(sizeof($validator->errors()) > 0){
+                return response()->json($validator->errors(), 404);
+            }
+        }elseif($teste->tipo == "magnético"){
+            $validator = Validator::make($request->all(), [
+                'sensor_id' => 'required|numeric|',
+                'valor' => 'in: 1,0|required|numeric|',
+                'data_horario' => 'required|date',
+            ]);
+
+            if(sizeof($validator->errors()) > 0){
+                return response()->json($validator->errors(), 404);
+            }
+        }else{
+            $error_return = ['error' => ['Não foi possivel encontrar esse tipo']];
+            return response()->json($error_return, 404);
+        }
+
         if(sizeof($validator->errors()) > 0 ){
             return response()->json($validator->errors(), 404);
         }
