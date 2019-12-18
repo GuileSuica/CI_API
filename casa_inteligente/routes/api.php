@@ -29,7 +29,7 @@ Route::namespace('Api')->name('api.')->group(function(){
     Route::prefix('medicao')->group(function(){
         Route::get('/', 'MedicaoController@index')->name('index_medicao');
         Route::post('/', 'MedicaoController@store')->name('store_medicao');
-        //Route::get('/{id}', 'MedicaoController')->name('single_medicao');
+        Route::get('/{id}', 'MedicaoController@show')->name('single_medicao');
         //Route::put('/{id}', 'MedicaoController@update')->name('update_medicao');
         //Route::delete('/{id}', 'MedicaoController@delete')->name('delete_medicao');
     });
