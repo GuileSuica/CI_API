@@ -70,7 +70,7 @@ class SensorController extends Controller
 
         $validator = Validator::make($request->all(), [
             'nome' => 'required|string|min:2|max:50',
-            'tipo' => 'in:temperatura,luminosidade,presença,magnético|required|min:8|max:20'
+            'tipo' => 'in:temperatura,luminosidade,presença,magnético|min:8|max:20'
         ]);
 		$validator = Validator::make($i,[
             'id' => 'required|numeric'
