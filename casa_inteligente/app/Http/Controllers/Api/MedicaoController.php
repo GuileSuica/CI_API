@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Medicoe;
+use App\Sensor;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -16,9 +17,25 @@ class MedicaoController extends Controller
      * @return \Illuminate\Http\Response
      */
 
+    public function __construct(Sensor $sensors)
+	{
+		$this->sensors = $sensors;
+	}
+
+
+    public function __constructM(Medicoe $medicoes)
+    {
+        $this->medicoe = $medicoes;
+    }
+
     public function index()
     {
-       return Medicoe::all();
+        if(sizeof($this->sensors->all()) <= 0 ){
+            return response()->json(['data' => ['msg' => 'Não existe nenhuma medição salva']], 404);
+        }
+        else{
+            return response()->json($this->sensors->all());
+        }
     }
 
     /**
@@ -39,7 +56,28 @@ class MedicaoController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validator = Validator::make($request->all(), [
+            'sensor_id' => 'required|integer|min:1|max:3',
+            'valor' => 'in:celcius|required|min:7|max:7',
+            'data_horario' => 'required|date',
+        ]);
+        if(sizeof($validator->errors()) > 0 ){
+            return response()->json($validator->errors(), 404);
+        }
+
+        try{
+            $medicaoData = $request->all();
+            $this->medicoe->create($medicaoData);
+            $data = Medicoe::where('sensor_id', $request->get('sensor_id'))->get();
+            $return = ['data' => ['msg' => 'Medição criado com sucesso!']];
+            return response()->json($return, 201);
+
+        }catch(\Exception $e){
+            if(is_null($request->sensor_id)) return response()->json(['data'=>['msg'=>'Sensor não encontrado!']], 404);
+        }
+
+        //$req = $request->all();
+        //return response()->json($req);
     }
 
     /**
@@ -50,7 +88,8 @@ class MedicaoController extends Controller
      */
     public function show()
     {
-
+        $medicoes = Medicoe::where('sensor_id')->get();
+        return view('indexMedicoes', compact('medicoes'));
     }
 
     /**
