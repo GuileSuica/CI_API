@@ -8,12 +8,12 @@ class Medicoe extends Model
 {
     protected $fillabel = [
         'valor',
+        'sensor_id',
         'data_horario'
     ];
 
     protected $guarded = [
         'id',
-        'sensor_id',
         'created_at',
         'updated_at'
     ];
