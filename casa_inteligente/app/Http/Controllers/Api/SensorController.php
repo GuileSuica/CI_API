@@ -26,7 +26,15 @@ class SensorController extends Controller
     }
     public function show($id)
     {
-        $sensors = $this->sensors->find($id);
+		$i = ['id' => $id];
+        $validator = Validator::make($i,[
+            'id' => 'required|numeric'
+        ]);
+        if(sizeof($validator->errors()) > 0 ){
+            return response()->json($validator->errors(), 404);
+        }
+
+    	$sensors = $this->sensors->find($id);
     	if(is_null($sensors)) return response()->json(['data'=>['msg'=>'Sensor não encontrado!']], 404);
     	$data = ['data' => $sensors];
 	    return response()->json($data);
@@ -58,20 +66,29 @@ class SensorController extends Controller
     }
 	public function update(Request $request, $id)
 	{
+		$i = ['id' => $id];
+
         $validator = Validator::make($request->all(), [
             'nome' => 'required|string|min:2|max:50',
             'tipo' => 'in:temperatura,luminosidade,presença,magnético|required|min:8|max:20'
         ]);
-
+		$validator = Validator::make($i,[
+            'id' => 'required|numeric'
+        ]);
         if(sizeof($validator->errors()) > 0 ){
             return response()->json($validator->errors(), 404);
         }
 		try {
 			$sensorsData = $request->all();
 			$sensors     = $this->sensors->find($id);
-			$sensors->update($sensorsData);
-			$return = ['data' => ['msg' => 'Sensor atualizado com sucesso!']];
-			return response()->json($return, 201);
+			if($sensors){
+				$sensors->update($sensorsData);
+				$return = ['data' => ['msg' => 'Sensor atualizado com sucesso!']];
+				return response()->json($return, 201);
+			}
+			else{
+				return response()->json(['data' => ['Este sensor nao pode ser atualizado porque nao existe']], 404);
+			}
 		} catch (\Exception $e) {
 			if(config('app.debug')) {
 				return response()->json(['data'=>['msg'=>'Houve um erro ao realizar operação de atualizar']], 500);
@@ -80,7 +97,13 @@ class SensorController extends Controller
 	}
 	public function delete($id)
 	{
-		//dd($id);
+		$i = ['id' => $id];
+        $validator = Validator::make($i,[
+            'id' => 'required|numeric'
+        ]);
+        if(sizeof($validator->errors()) > 0 ){
+            return response()->json($validator->errors(), 404);
+        }
 		$sensor = Sensor::find($id);
 		//dd($sensor);
 		try {
