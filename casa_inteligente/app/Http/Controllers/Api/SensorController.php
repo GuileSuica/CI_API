@@ -42,7 +42,7 @@ class SensorController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'nome' => 'required|string|min:2|max:50',
-            'tipo' => 'in:temperatura,luminosidade,presenca,magnético|required|min:8|max:20'
+            'tipo' => 'in:temperatura,luminosidade,presença,magnético|required|min:8|max:20'
         ]);
 
         if(sizeof($validator->errors()) > 0 ){
@@ -52,7 +52,8 @@ class SensorController extends Controller
 		try {
 			$sensorsData = $request->all();
 			$this->sensors->create($sensorsData);
-			$return = ['data' => ['msg' => 'Sensor criado com sucesso!']];
+			$data = Sensor::where('nome',$request->get('nome'))->where('tipo', $request->get('tipo'))->get();
+			$return = ['data' => ['msg' => 'Sensor criado com sucesso!'], 'id' => ['number' => $data[0]->id ]];
 			return response()->json($return, 201);
 		} catch (\Exception $e) {
 			if(config('app.debug')) {
@@ -66,7 +67,7 @@ class SensorController extends Controller
 	{
         $validator = Validator::make($request->all(), [
             'nome' => 'required|string|min:2|max:50',
-            'tipo' => 'in:temperatura,luminosidade,presenca,magnético|required|min:8|max:20'
+            'tipo' => 'in:temperatura,luminosidade,presença,magnético|required|min:8|max:20'
         ]);
 
         if(sizeof($validator->errors()) > 0 ){
