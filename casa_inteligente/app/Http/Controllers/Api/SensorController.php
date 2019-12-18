@@ -88,7 +88,13 @@ class SensorController extends Controller
 	}
 	public function delete($id)
 	{
-		//dd($id);
+		$i = ['id' => $id];
+        $validator = Validator::make($i,[
+            'id' => 'required|numeric'
+        ]);
+        if(sizeof($validator->errors()) > 0 ){
+            return response()->json($validator->errors(), 404);
+        }
 		$sensor = Sensor::find($id);
 		//dd($sensor);
 		try {
