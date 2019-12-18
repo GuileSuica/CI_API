@@ -25,7 +25,12 @@ class MedicaoController extends Controller
 
     public function index()
     {
-
+        if(sizeof($this->medicoe->all()) <= 0 ){
+            return response()->json(['data' => ['msg' => 'Nenhuma medição cadastrada']], 404);
+        }
+        else{
+            return response()->json($this->medicoe->all(), 200);
+        }
     }
 
     /**
@@ -55,18 +60,18 @@ class MedicaoController extends Controller
             return response()->json($validator->errors(), 404);
         }
 
-        //try{
+        try{
             $medicaoData = $request->all();
             $this->medicoe->create($medicaoData);
             $data = Medicoe::where('sensor_id', $request->get('sensor_id'))->get();
             $return = ['data' => ['msg' => ['Medição criado com sucesso!'], [$data]]];
             return response()->json($return, 201);
 
-        //}catch(\Exception $e){
-            //if(is_null($request->sensor_id)) return response()->json(['data'=>['msg'=>'Sensor não encontrado!']], 404);
-        //}
+        }catch(\Exception $e){
+            if(is_null($request->sensor_id)) return response()->json(['data'=>['msg'=>'Sensor não encontrado!']], 404);
+        }
 
-        $req = $request->all();
+        //$req = $request->all();
         //return response()->json($return);
     }
 
@@ -78,6 +83,14 @@ class MedicaoController extends Controller
      */
     public function show($id)
     {
+        $i = ['id' => $id];
+        $validator = Validator::make($i,[
+            'id' => 'required|numeric'
+        ]);
+        if(sizeof($validator->errors()) > 0 ){
+            return response()->json($validator->errors(), 404);
+        }
+
         $medicoes = Medicoe::where('id', $id)->get();
         $teste = count($medicoes);
         if($teste != 0){
