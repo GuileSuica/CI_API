@@ -17,6 +17,7 @@ class Medicoe extends Model
         'created_at',
         'updated_at'
     ];
+
     public function  sen(){
         return $this->hasMany('App\Sensor');
     }
