@@ -58,7 +58,10 @@ class MedicaoController extends Controller
         //]);
         $req_sen_id = $request->sensor_id;
         $teste = Sensor::find($req_sen_id);
-
+        
+        if(!$teste){
+            return response()->json(['data'=>['msg'=>'Sensor não existe']], 404);
+        }
         //return response()->json($teste->tipo);
 
         if($teste->tipo == "temperatura"){
