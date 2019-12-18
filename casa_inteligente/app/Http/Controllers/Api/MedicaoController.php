@@ -123,7 +123,7 @@ class MedicaoController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $i = ['data' => $id];
     }
 
     /**
@@ -132,8 +132,29 @@ class MedicaoController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function delete($id)
     {
-        //
+        $i = ['id' => $id];
+        $validator = Validator::make($i, [
+            'id' => 'required|numeric'
+        ]);
+
+        if(sizeof($validator->errors()) > 0 ){
+            return response()->json($validator->errors(), 404);
+        }
+
+        $medicao_count = Medicoe::where('id', $id)->count();
+        $medicao = Medicoe::find($id);
+
+        if($medicao_count != 0){
+            $medicao->delete();
+            return response()->json(['data' => [$i],['msg' => 'Medição removida com sucesso!']], 200);
+        }else{
+            return response()->json(['data' => ['msg' => 'Esta medição nao pode ser removido porque nao existe']], 500);
+        }
+
+        //return response()->json($medicao ,201);
+        $json_medicao = ['data' => [$medicao]];
+        return response()->json($json_medicao ,201);
     }
 }
