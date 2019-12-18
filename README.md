@@ -39,6 +39,10 @@ Gere a chave
 Rode o servidor
 
     php artisan serve
+    
+Para os testes 
+
+    composer require --dev laravel/dusk
 
 # Como testar a API
 
