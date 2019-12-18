@@ -26,14 +26,7 @@ class SensorController extends Controller
     }
     public function show($id)
     {
-        $validator = Validator::make($id,[
-            'id' => 'required|number'
-        ]);
-        if($validator->errors()){
-            return response()->json($validator->errors(), 404);
-        }
-
-    	$sensors = $this->sensors->find($id);
+        $sensors = $this->sensors->find($id);
     	if(is_null($sensors)) return response()->json(['data'=>['msg'=>'Sensor não encontrado!']], 404);
     	$data = ['data' => $sensors];
 	    return response()->json($data);
