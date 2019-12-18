@@ -64,12 +64,12 @@ class SensorController extends Controller
     }
 	public function update(Request $request, $id)
 	{
-        $validator = Validator::make($id, $request->all(),[
-            'id' => 'required|number',
+        $validator = Validator::make($request->all(), [
             'nome' => 'required|string|min:2|max:50',
-            'tipo' => 'in:temperatura, luminosidade, presença, magnético|required|min:8|max:10'
+            'tipo' => 'in:temperatura,luminosidade,presenca,magnético|required|min:8|max:20'
         ]);
-        if($validator->errors()){
+
+        if(sizeof($validator->errors()) > 0 ){
             return response()->json($validator->errors(), 404);
         }
 		try {
@@ -84,12 +84,19 @@ class SensorController extends Controller
 			}
 		}
 	}
-	public function delete(Sensor $id)
+	public function delete($id)
 	{
-
+		//dd($id);
+		$sensor = Sensor::find($id);
+		//dd($sensor);
 		try {
-			$id->delete();
-			return response()->json(['data' => ['msg' => 'Sensor removido com sucesso!']], 200);
+			if($sensor){
+				$sensor->delete();
+				return response()->json(['data' => ['msg' => 'Sensor removido com sucesso!']], 200);
+			}
+			else{
+				return response()->json(['data' => ['msg' => 'Este sensor nao pode ser removido porque nao existe']], 500);
+			}
 		}catch (\Exception $e) {
 			if(config('app.debug')) {
 				return response()->json(['data'=>['msg'=>'Houve um erro ao realizar operação de remover']], 500);
