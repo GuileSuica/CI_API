@@ -123,7 +123,37 @@ class MedicaoController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $i = ['data' => $id];
+        //return response()->json($request->all(), 200);
+        $validator = Validator::make($request->all(), [
+            'valor' => 'required|numeric',
+            'data_horario' => 'date'
+        ]);
+
+        $i = ['id' => $id];
+        $validatorid = Validator::make($i, [
+            'id' => 'required|numeric'
+        ]);
+
+        if(sizeof($validator->errors()) > 0){
+            return response()->json($validator->errors(), 404);
+        }
+        if(sizeof($validatorid->errors()) > 0){
+            return response()->json($validatorid->errors(), 404);
+        }
+
+        $medicao_count= Medicoe::where('id', $id)->count();
+        $medicao = Medicoe::find($id);
+
+        if($medicao_count != 0){
+
+            $update_req = $request->all();
+            $medicao->update($update_req);
+            $json = ['data' => ['Update feito com sucesso']];
+            return response()->json($json , 200);
+
+        }else{
+            return response()->json(['data' => ['msg' => 'Esta medição nao pode ter update porque não existe']], 500);
+        }
     }
 
     /**
@@ -134,6 +164,7 @@ class MedicaoController extends Controller
      */
     public function delete($id)
     {
+
         $i = ['id' => $id];
         $validator = Validator::make($i, [
             'id' => 'required|numeric'
@@ -150,7 +181,7 @@ class MedicaoController extends Controller
             $medicao->delete();
             return response()->json(['data' => [$i],['msg' => 'Medição removida com sucesso!']], 200);
         }else{
-            return response()->json(['data' => ['msg' => 'Esta medição nao pode ser removido porque nao existe']], 500);
+            return response()->json(['data' => ['msg' => 'Esta medição nao pode ser removida porque nao existe']], 500);
         }
 
         //return response()->json($medicao ,201);
